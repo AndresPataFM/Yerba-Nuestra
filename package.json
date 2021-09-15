@@ -1,0 +1,28 @@
+{
+  "name": "yerbanuestra",
+  "version": "1.0.0",
+  "description": "Una pagina de ecomerce de yerba de mate y accesorios",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-css": "node-sass --include-path scss scss/style.scss css/style.css",
+    "watch-css": "nodemon -e scss -x \"npm run build-css\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndresPataFM/Yerba-Nuestra.git"
+  },
+  "keywords": [
+    "YN"
+  ],
+  "author": "Andrés Pata Fraile de Manterola",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AndresPataFM/Yerba-Nuestra/issues"
+  },
+  "homepage": "https://github.com/AndresPataFM/Yerba-Nuestra#readme",
+  "devDependencies": {
+    "node-sass": "^6.0.1",
+    "nodemon": "^2.0.12"
+  }
+}
