@@ -1,0 +1,16 @@
+html {
+    --top-spacing: 150px;
+    scroll-padding-top: var(--top-spacing);
+}
+body{
+    background-color: $White;
+    font-family: PlayfairDisplay-VariableFont;
+    color: $Dark;
+    margin: 0;
+    margin: var(--top-spacing) auto;
+}
+h1{
+    text-align: center;
+    font-size: 3rem;
+    margin: 0;
+}

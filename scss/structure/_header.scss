@@ -1,0 +1,72 @@
+header{
+    background-color: $Green-Dark;
+    width: 100%;
+    min-height: 10vh;
+    display: flex;
+    align-content: center;
+    justify-content: space-between;
+    margin-bottom: 1%;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+.logo{
+    height: 78px;
+    filter: invert(95%) sepia(7%) saturate(1307%) hue-rotate(37deg) brightness(101%) contrast(105%);
+    margin: 1%;
+}
+.boina{
+    height: 78px;
+    filter: invert(95%) sepia(7%) saturate(1307%) hue-rotate(37deg) brightness(101%) contrast(105%);
+    margin: 1%;
+}
+.menuHolder{
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+}
+.barraMenu{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-content: center;
+    li{
+        float: left;
+        margin: 0.2rem;
+        height: fit-content;
+        display: flex;
+        align-self: center;
+        font-size: 2rem;
+        padding-left: 1%;
+        padding-right: 1%;
+        a{
+            display: block;
+            text-align: center;
+            color: $Green;
+            text-decoration: none;
+        }
+        a:hover{
+            color: $White;
+        }
+        a:link, a:visited {
+            color: $Green;
+            text-decoration: none;
+        }
+    }
+}
+.waveFull{
+    height: 250px;
+    overflow: hidden;
+    background-image: url("../img/yerbaMate.jpg");
+    background-repeat: none;
+}
+.waveClear{
+    height: 100%;
+    width: 100%;
+}
+.wavePaint{
+    stroke: none;
+    fill: $White;
+}
