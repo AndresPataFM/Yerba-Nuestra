@@ -36,7 +36,7 @@ function mateSelector(itemNumber){
                 return "La Tranquera";
                 break;
             default:
-                order=Number(prompt("Por favor ingrese un codigo del mate valido."));
+                order=Number(prompt("El codigo no es válido: Por favor ingrese el código del mate que desea comprar: [1]Playadito, [2]Nobleza Gaucha, [3]Mañanita, [4]Taragüi, [5]Unión Liviana, [6]Union Suave, [7]La Tranquera"));
                 break;
         }
     }
