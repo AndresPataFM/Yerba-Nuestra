@@ -1,176 +1,337 @@
-//Globales horribles que no merecen existir
-let basket = 0;
-
-function mateSelector(itemNumber){
-    // Esta Funcion retorna el nombre del mate que se eligio a comprar con el prompt
-    let validator = true;
-    let order = Number(itemNumber)
-    while(validator){
-        switch(order){
-            case 1:
-                validator = false;
-                return "Playadito";
-                break;
-            case 2:
-                validator = false;
-                return "Nobleza Gaucha";
-                break;
-            case 3:
-                validator = false;
-                return "Mañanita";
-                break;
-            case 4:
-                validator = false;
-                return "Taragüi";
-                break;
-            case 5:
-                validator = false;
-                return "Unión Liviana";
-                break;
-            case 6:
-                validator = false;
-                return "Union Suave";
-                break;
-            case 7:
-                validator = false;
-                return "La Tranquera";
-                break;
-            default:
-                order=Number(prompt("El codigo no es válido: Por favor ingrese el código del mate que desea comprar: [1]Playadito, [2]Nobleza Gaucha, [3]Mañanita, [4]Taragüi, [5]Unión Liviana, [6]Union Suave, [7]La Tranquera"));
-                break;
+class Product{
+    //Crea al producto
+    constructor(name, type, code, price, stock){
+        this.name = name;
+        this.type = type;
+        this.code = code;
+        this.baseCost = price;
+        this.profit = this.markUp(price)
+        this.price = this.profit+price;
+        this.tax = this.taxes(this.price)
+        this.totalPrice = Math.round((this.price + this.tax + Number.EPSILON) * 100) / 100
+        this.stock = stock;
+        this.available = false;
+    }
+    //Cambia el booleano available dependiendo si hay stock o no
+    empty = function(){
+        if(this.stock<1){
+            return this.available=false
+        }
+        if(this.stock>1){
+            return this.available=true
         }
     }
-}
-function quantity(){
-    let validator = true
-    let cantidad = Number(prompt(`¿Cuantos packetes de yerba desea comprar?`))
-    do{
-        if(Number.isInteger(cantidad)&&cantidad>0){
-            validator = false
-        } else{
-            cantidad = Number(prompt("Ingrese un número válido por favor."))
+    //agrega stock al producto y checkea si esta disponible
+    //calcula el precio del markUp
+    markUp= function(baseCost){
+        let profit = 0.2
+        return Math.round((profit + Number.EPSILON) * 100) / 100
+    }
+    // costo de impuestos
+    taxes= function(sellCost){
+        //por ahora solo hay IVA
+        let taxIVA = 0.21
+        let taxHolder = taxIVA*sellCost
+        //return asi para q tenga 2 decimales
+        return Math.round((taxHolder + Number.EPSILON) * 100) / 100
+    }
+    restock = function(x){
+            this.stock+=x
+            this.empty()
         }
-    } while(validator){}
-    return cantidad;
 }
-function baseCost(item){
-    // Esta función retorna el precio base del mate seleccionado a comprar que paga la tienda para comprarlo
-    switch(item){
-        case "Playadito":
-            return 534;
-            break;
-        case "Nobleza Gaucha":
-            return 407;
-            break;
-        case "Mañanita":
-            return 501;
-            break;
-        case "Taragüi":
-            return 501;
-            break;
-        case "Unión Liviana":
-            return 516.55;
-            break;
-        case "Union Suave":
-            return 496.9;
-            break;
-        case "La Tranquera":
-            return 452.9;
-            break;
-        default:
-            return alert("Lo sentimos, el programa se encontro con un error, por favor reinicie la página e intente nuevamente.");
-            break;
-    }
-}
-
-// Aumenta el precio para que la tienda tenga ganancia
-const markUp = basePrice => Math.round(basePrice*0.2);
-
-//Agrega el IVA
-const impuestos = midPrice => Math.round(midPrice*0.21);
-
-//Calcula el costo del envio
-function shippingCost(destination){
-    switch(destination){
-        case 1:
-            return 500
-            break;
-        case 2: 
-            return 1500
-            break;
-        case 3:
-            return 2000
-            break;
-        case 4:
-            return 5000
-            break;
-        default:
-            return 0
-            break;
-    }
-}
-
-//Combierte el numero de destination a palabras
-function destinationName(destination){
-    switch(destination){
-        case 1:
-            return "Capital federal Argentina"
-            break;
-        case 2: 
-            return "Provincia Argentina"
-            break;
-        case 3:
-            return "Mercosur"
-            break;
-        case 4:
-            return "Resto de Sudamérica"
-            break;
-        default:
-            return "Tienda"
-            break;
-    }
-}
-
-//Comprar 1 tipo de mate
-function buyingMate(){
-    let currentCost = 0;
-    let elegirMate = Number(prompt("Por favor ingrese el código del mate que desea comprar: [1]Playadito, [2]Nobleza Gaucha, [3]Mañanita, [4]Taragüi, [5]Unión Liviana, [6]Union Suave, [7]La Tranquera"))
-    let currentMate = mateSelector(elegirMate);
-    costs=baseCost(currentMate)
-    let cantidad = 0;
-    cantidad = quantity()
-    currentCost += costs*cantidad;
-    let taxes= impuestos(currentCost);
-    let winings= markUp(currentCost);
-    let locationCode = Number(prompt("Elija la opción de su delivery: [1]Capital federal Argentina [2]Provincia Argentina [3]Mercosur [4]Resto de Sudamérica [0]Deseo buscarlo en la tienda"))
-    let validatorDestination =  true
-    do{
-        if(locationCode===0||locationCode===1|locationCode===2||locationCode===3||locationCode===4){
-            validatorDestination=false
-        } else {
-            locationCode = Number(prompt("Elija la opción de su delivery: [1]Capital federal Argentina [2]Provincia Argentina [3]Mercosur [4]Resto de Sudamérica [0]Deseo buscarlo en la tienda"))
-        }
-    }while(validatorDestination){}
-    let shipping= shippingCost(locationCode);
-    let locationName= destinationName(locationCode)
-    if((shipping*4)<winings){
-        alert("¡Felicitaciones, califica para envio grátis a su destino!")
-        shipping=0;
-    }
-    currentCost+=taxes+winings+shipping
-    let finalTest = ""
-    
-        finalTest= confirm(`El precio de ${cantidad} bolsas de ${currentMate} es de ${currentCost} pesos de los cuales ${taxes} pesos son impuestos con entrega a ${locationName}, desea proceder con el pago?`)
-        if(finalTest){
-            alert(`Gracias por su compra, los ${currentCost} pesos se agregaran a la canasta para que prosiga con su pago.`)
-            return basket+=currentCost
-        }else{
-            if(confirm("¿Desea volver a comprar?")){
-                buyingMate()
-            }else{
-                alert("¡Esperamos que vuelva pronto!")
+/* A Agregar
+1- Listo -Terminar sellproduct (importante el mejorar los prompts)
+2- Listo -Terminar addproduct(mejorar validaciones con métodos de array y revisar validaciones de price) 
+3-Agregar destinos de entrega, precios y metodos de agregar nuevos destinos
+4- Listo -Agregar metodo de impuesto
+5- Listo -Fijarse como hacer para comprar multiples mates sin hacer un choclo de codigo
+6-Agregar un helper para la clase
+*/
+const store = {
+    //Array que contiene todos los productos
+    products: [],
+    //Cantidad de productos en el array
+    productQuantity: 0,
+    validators: false,
+    //Agrega productos, aumenta la cantidad de productos y checkea si tiene en stock
+    addProduct: function(name, type, code, price, stock){
+        //validador de parametros ingresados
+        let holder = [{parameter: "name", value: name}, {parameter: "type", value: type}, {parameter: "code", value: code},  {parameter: "price", value: price}, {parameter: "stock", value: stock}]
+        let tester = []
+        //pushea los undefined a un nuevo array
+        for(let i=0; i<holder.length; i++){
+            if(typeof holder[i].value === 'undefined'){
+                tester.push(holder[i].parameter)
             }
         }
+        //Dice los errores undefined al usuario en un console log en return, asi no crea un produto roto
+        if(tester.length>0){
+            let error = ""
+            tester.forEach(obj => {
+                error+=" " + obj + ","
+            })
+            return console.log("Hay parametros no definidos: "+error)
+        }
+        //Valida name
+        if (typeof name !== 'string'){
+            return console.log("Error: name tiene que ser un string")
+        }
+        //Valida type
+        if(typeof(type) !== 'string'){
+            return console.log("Error: type tiene que ser un string")
+        }
+        //Valida stock (se valida antes que codigo porque codigo tarda mas en validar)
+        if(!Number.isInteger(stock)||stock<1){
+            return console.log("Error: todos los stock son numeros integrales mayores a 0")
+        }
+        //Valida price
+        if(price<=0){
+            return console.log("Error: todos los price son numeros  mayores a 0")
+        }
+        if(!Number.isInteger(price*100)){
+            price=Math.round((price + Number.EPSILON) * 100) / 100
+            console.log(`Price fue redondeado a ${price} a los 2 decimales`)
+        }
+        //Valida el codigo
+        if(!Number.isInteger(code)||code<1){
+            return console.log("Error: todos los codigos son numeros integrales mayores o iguales a 0")
+        }
+        //¿Por que no funca? => No funca por los corchetes
+        // if(store.products.some(prod =>{
+        //     prod.code === code
+        // })){
+        //     return console.log("Error: ese codigo ya esta en uso")
+        // }
+        for(let i=0; i<this.products.length; i++){
+            if(this.products[i].code === code){
+                return console.log(`Error: el codigo ${code} ya esta en uso`)
+            }
+        }
+        this.products.push(new Product(name, type, code, price, stock));
+        this.products[this.products.length-1].empty();
+        this.productQuantity++;
+        return console.log(this.products[this.products.length-1])
+    },
+    //Contiene el precio de los delivery con IVA incluido
+    locations: [
+        {site: "Tienda", cost: 0, code:0},
+        {site: "Capital federal Argentina", cost: 500, code:1},
+        {site: "Provincia Argentina", cost: 1500, code:2},
+        {site: "Mercosur", cost: 2500, code:3},
+        {site: "Resto de Sudamérica", cost: 5000, code:4},
+    ],
+    location: {
+        Location: class{
+            constructor(site, cost, code){
+                this.site = site;
+                this.cost = cost;
+                this.code = code;
+            }
+        },
+        add: function(site, cost, code){
+            //Luego le agrego validators, en estos momentos confiamos en el que agregue locations q sepa lo q hace
+            locations.push(new this.Location(site, cost, code))
+        },
+    },
+    sell: {
+        //canasta con los productos a comprar
+        basket: [],
+        //guarda el precio total de la venta
+        basketTotal: 0,
+        //guarda el precio individual de cada sección
+        basketPriceTotal: 0,
+        basketProfit: 0,
+        basketTaxesTotal: 0,
+        deliveryTotal: 0,
+        //crea los productos y cantidades a para que luego lo agreguen a la canasta
+        BasketProduct: class {
+            constructor(newProduct, newQuantity){
+                this.product=newProduct;
+                this.quantity=newQuantity;
+                this.purchaseProfit=newQuantity*newProduct.profit;
+                this.purchaseTax=newQuantity*newProduct.tax;
+                this.purchaseTotal=newQuantity*newProduct.totalPrice;
+            }
+        },
+        //si matchea el codigo trae el producto
+        getProduct: function(code){
+            let toBuy = {};
+            toBuy = store.products.find(prod => prod.code === code)
+            return toBuy
+        },
+        //agrega producto a la canasta
+        addBasket: function(code, quantity){
+            let productDesired = this.getProduct(code)
+            let temporary = new this.BasketProduct(productDesired, quantity)
+            this.basket.push(temporary)
+            //el return solo esta para comprobar x consola
+            return console.log(temporary)
+        },
+        //Actualiza los precios totales de la canasta
+        updateBasket: function(){
+            this.basket.forEach(x =>{
+                this.basketPriceTotal+=x.purchaseTotal
+                this.basketProfit+=x.purchaseProfit
+                this.basketTaxesTotal+=x.purchaseTax
+            })
+            this.basketTotal = this.basketPriceTotal + this.basketProfit + this.basketTaxesTotal + this.deliveryTotal
+            return console.log(this.basketTotal)
+        },
+        //Calcula el precio del delivery
+        deliveryFind: function(deliveryCode){
+            if(store.locations.some(loc =>{
+                loc.code === code
+            })){
+                this.deliveryTotal=loc.price
+                return loc.price
+            }
+        },
+        //calcula el precio total de la canasta
+        productPriceCalc: function(){
+            let priceHolder = 0;
+            for(let i=0; i<this.basket.length; i++){
+                priceHolder+= basket[i].product.price * basket[i].quantity;
+            };
+            this.productPriceTotal = priceHolder
+            return this.productPriceTotal
+        },
+        //calcula los impuestos totales de la compra
+        taxCalc: function(){
+            let taxHolder = 0
+            this.basket.forEach(x =>{
+                taxHolder += x.tax
+            })
+        },
+        //Crea la lista de productos a vender que tengan stock
+        deliveryList: function(){
+            let list = "Los lugares de delivery son:"
+            store.locations.forEach(x =>{
+                list+= ` [${x.code}]${x.site},`
+            })
+            return list
+        },
+        //Crea la lista para el prompt de delivery
+        productList: function(){
+            let list = "Los productos en venta son:"
+            store.products.forEach(x =>{
+                if(x.stock>0){
+                    list+= ` [${x.code}]${x.name} por ${x.totalPrice} pesos,`
+                }
+            })
+            return list
+        },
+        //Lleva la canasta al estado inicial (para cuando finaliza la compra)
+        reset: function(){
+            this.basket= []
+            //guarda el precio total de la venta
+            this.basketTotal= 0
+            //guarda el precio individual de cada sección
+            this.basketPriceTotal= 0
+            this.basketProfit= 0
+            this.basketTaxesTotal= 0
+            this.deliveryTotal= 0
+        },
+        reduceStock: function(){
+            for(let i=0; i<store.products.length; i++){
+                this.basket.forEach(x => {
+                    if(store.products[i].code===x.product.code){
+                        store.products[i].stock-=x.quantity
+                    }
+                })
+            }
+        },
+        sellOne: function(){
+            //Pedir un codigo de producto valido
+            let codeValidator= true
+            let codeToBuy = Number(prompt(`Gracias por comprar en Yerba Nuestra, por favor ingrese el codigo del producto que desea comprar([codigo]Nombre). ${this.productList()}`))
+            //Se fija si el codigo esta en la lista de productos
+            if(store.products.some(x => x.code === codeToBuy)){
+                codeValidator = false
+            }
+            if(this.basket.some(x => x.product.code === codeToBuy)){
+                codeToBuy = Number(prompt(`Ya tiene ese producto en canasta, por favor ingrese el codigo un producto distinto que desea comprar([codigo]Nombre). ${this.productList()}`))
+                codeValidator = true
+            }
+            while(codeValidator){
+                codeToBuy = Number(prompt(`Lo lamentamos, el codigo ingresado no es valido, por favor ingrese el codigo del producto que desea comprar([codigo]Nombre). ${this.productList()}`))
+                if(store.products.some(x => x.code === codeToBuy)){
+                    codeValidator = false
+                }
+                if(this.basket.some(x => x.product.code === codeToBuy)){
+                    codeToBuy = Number(prompt(`Ya tiene ese producto en canasta, por favor ingrese el codigo un producto distinto que desea comprar([codigo]Nombre). ${this.productList()}`))
+                    codeValidator = true
+                }   
+            }
+            let productToBuy = this.getProduct(codeToBuy)
+            let productToBuyStock = productToBuy.stock
+            let quantityToBuy = Number(prompt(`Actualmente hay ${productToBuyStock} de ${productToBuy.name} a $${productToBuy.totalPrice}. Por favor ingrese la cantidad del producto que desea comprar.`))
+            while(quantityToBuy<0||quantityToBuy>productToBuyStock){
+                quantityToBuy = Number(prompt(`El valor ingresado no es valido. Actualmente hay ${productToBuyStock} de ${productToBuy.name}.Por favor ingrese la cantidad del producto que desea comprar.`))
+            }
+            if(confirm(`¿Desea agregar ${quantityToBuy} de ${productToBuy.name} por $${productToBuy.totalPrice*quantityToBuy} pesos (de esos $${productToBuy.tax*quantityToBuy} pesos son impuestos)?`)){
+                this.addBasket(codeToBuy, quantityToBuy)
+                this.updateBasket()
+                return console.log(this.basket)
+            }
+            return console.log("Compra abortada")
+        },
+        selling: function(){
+            this.sellOne()
+            let validateMore = confirm("¿Desea agregar otro producto a la canasta?")
+            while(validateMore){
+                this.sellOne()
+                validateMore = confirm("¿Desea agregar otro producto a la canasta?")
+            }
+            let deliveryCode = Number(prompt(`Por favor elija el código de su delivery ([codigo]Sitio precio). ${this.deliveryList()}`))
+            while(!Number.isInteger(deliveryCode)||deliveryCode<0||deliveryCode>=store.locations.length){
+                deliveryCode = Number(prompt(`Ese no es un codigo válido, por favor elija el código de su delivery ([codigo]Sitio precio). ${this.deliveryList()}`))
+            }
+            let locationIntermediary = store.locations.find(x => x.code === deliveryCode)
+            let locationCost = locationIntermediary.cost*4
+            this.deliveryTotal = locationIntermediary.cost
+            if(locationCost<this.basketProfit){
+                alert("¡Felicitaciones, usted califica para un delivery gratis!")
+                this.deliveryTotal = 0
+            }
+            if(confirm(`Desea realizar esta compra de ${this.basket.length} tipo/s productos por $${this.basketTotal} pesos de los cuales $${this.basketTaxesTotal} pesos son por impuestos y $${this.deliveryTotal} pesos son del delivery.`)){
+                alert("¡Gracias por su compra, vuelva pronto!")
+                this.reduceStock()
+                this.reset()
+                return console.log("compra realizada")
+            } else if(confirm("¿Desea volver a intentar la compra?")){
+                this.selling()
+            }
+            return alert("¡Por favor vuelva pronto!")
+        },
+    },
 }
-
-buyingMate()
+function savedProducts(){
+    store.addProduct("Playadito 1kg", "yerba", 1, 534, 99)
+    store.addProduct("Nobleza Gaucha 1kg", "yerba", 2, 407, 99)
+    store.addProduct("Mañanita 1kg", "yerba", 3, 501, 99)
+    store.addProduct("Taragüi 1kg", "yerba", 4, 501, 99)
+    store.addProduct("Unión Liviana 1kg", "yerba", 5, 516.55, 89)
+    store.addProduct("Union Suave 1kg", "yerba", 6, 496.9, 99)
+    store.addProduct("La Tranquera 1kg", "yerba", 7, 452.9, 99)
+    console.log(store.products)
+}
+function test(){
+    console.log("agregar 1 producto")
+    store.addProduct("test1", "yerba", 12, 54.24, 99)
+    console.log("no definir 1")
+    store.addProduct("test2", "yerba", 54.24, 99)
+    console.log("codigo repetido")
+    store.addProduct("test3", "yerba", 12, 54.24, 99)
+    console.log("nombre no es string")
+    store.addProduct(4, "yerba", 13, 54.24, 99)
+    console.log("tipo no es string")
+    store.addProduct("test5", 5, 14, 54.24, 99)
+    console.log("costo mas de 2 decimales")
+    store.addProduct("test6", "yerba", 15, 54.242, 99)
+    console.log("stock negativo")
+    store.addProduct("test7", "yerba", 16, 54.24, -99)
+    console.log(store.products)
+}
+savedProducts()
+store.sell.selling()
