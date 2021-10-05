@@ -1,3 +1,15 @@
+const pata = {
+    round2: function(num){
+        //redondea a 2 cifras
+        return Math.round((num + Number.EPSILON) * 100) / 100
+    },
+    rounder: function(num, order){
+        //redondea al orden elegido
+        return Math.round((num + Number.EPSILON) * Math.pow(10, order)) / Math.pow(10, order)
+    },
+}
+
+
 class Product{
     //Crea al producto
     constructor(name, type, code, price, stock){
@@ -305,6 +317,51 @@ const store = {
             return alert("¡Por favor vuelva pronto!")
         },
     },
+    sort: function(order){
+        switch(order){
+            case 1:
+                //ordenar por codigo
+                store.products.sort((x, y)=>{
+                    if(x.code>y.code){return 1}
+                    if(x.code<y.code){return -1}
+                    return 0
+                })
+                return console.log(store.products)
+                break;
+            case 2:
+                 //ordenar por baseCost, por como estan codeado todos los precios, price, tax, profit, etc se ordenarian igual
+                store.products.sort((x, y)=>{
+                    if(x.baseCost>y.baseCost){return 1}
+                    if(x.baseCost<y.baseCost){return -1}
+                    return 0
+                })
+                return console.log(store.products)
+                break;
+                case 1:
+            case 3:
+            //ordenar por stock
+                store.products.sort((x, y)=>{
+                if(x.stock>y.stock){return 1}
+                if(x.stock<y.stock){return -1}
+                return 0
+                })
+                break;
+            case 4:
+                //ordenar por name
+                store.products.sort((x, y)=>{return x.name.localeCompare(y.name)})
+                return console.log(store.products)
+                break;
+            case 5:
+                //ordenar por type
+                store.products.sort((x, y)=>{return x.type.localeCompare(y.type)})
+                return console.log(store.products)
+                break;
+            default:
+                //ordenar por codigo
+                console.log("ordenar por [parametro]: [1]code; [2]cost,price,etc; [3]stock; [4]name; [5]type")
+                break;
+        }
+    }
 }
 function savedProducts(){
     store.addProduct("Playadito 1kg", "yerba", 1, 534, 99)
