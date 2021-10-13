@@ -123,6 +123,7 @@ const store = {
         this.products.push(new Product(name, type, code, price, stock));
         this.products[this.products.length-1].empty();
         this.productQuantity++;
+        printer.changeProdList()
         return console.log(this.products[this.products.length-1])
     },
     //Contiene el precio de los delivery con IVA incluido
@@ -341,10 +342,11 @@ const store = {
             case 3:
             //ordenar por stock
                 store.products.sort((x, y)=>{
-                if(x.stock>y.stock){return 1}
-                if(x.stock<y.stock){return -1}
-                return 0
+                    if(x.stock>y.stock){return 1}
+                    if(x.stock<y.stock){return -1}
+                    return 0
                 })
+                return console.log(store.products)
                 break;
             case 4:
                 //ordenar por name
@@ -363,6 +365,19 @@ const store = {
         }
     }
 }
+
+const printer = {
+    changeProdList: function(){
+        let lista = document.getElementById("productList")
+        lista.innerHTML = "";
+        for (const item of store.products){
+            let li = document.createElement("li")
+            li.innerHTML = `[${item.code}]${item.name} a $${item.totalPrice} pesos`
+            lista.appendChild(li);
+        }
+    },
+}
+
 function savedProducts(){
     store.addProduct("Playadito 1kg", "yerba", 1, 534, 99)
     store.addProduct("Nobleza Gaucha 1kg", "yerba", 2, 407, 99)
@@ -391,4 +406,4 @@ function test(){
     console.log(store.products)
 }
 savedProducts()
-store.sell.selling()
+// store.sell.selling()
