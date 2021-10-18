@@ -378,7 +378,17 @@ const printer = {
     },
 }
 
-document.getElementById("purchaseButton").addEventListener("click", ()=>{store.sell.selling()})
+document.getElementById("purchaseButton").onclick = ()=>{store.sell.selling()}
+
+document.getElementById("npAdd").addEventListener("click", (e)=>{
+    e.preventDefault()
+    let name = document.getElementById("npName").value
+    let type = document.getElementById("npType").value
+    let code = Number(document.getElementById("npCode").value)
+    let price = Number(document.getElementById("npPrice").value)
+    let stock = Number(document.getElementById("npStock").value)
+    store.addProduct(name, type, code, price, stock)
+})
 
 function savedProducts(){
     store.addProduct("Playadito 1kg", "yerba", 1, 534, 99)
