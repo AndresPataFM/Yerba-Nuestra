@@ -378,6 +378,8 @@ const printer = {
     },
 }
 
+document.getElementById("purchaseButton").addEventListener("click", ()=>{store.sell.selling()})
+
 function savedProducts(){
     store.addProduct("Playadito 1kg", "yerba", 1, 534, 99)
     store.addProduct("Nobleza Gaucha 1kg", "yerba", 2, 407, 99)
