@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="./../css/style.css">
+    <title>Yerba Nuestra</title>
+</head>
+<body>
+    <header>
+        <!-- Menu -->
+        <img src="./../img/mateLogo.svg" alt="logo" class="logo">
+        <div class="menuHolder">
+            <h1>Yerba Nuestra</h1>
+            <ul class="barraMenu">
+                <li><a href="./../index.html">Home</a></li>
+                <li><a href="./store.html">Productos</a></li>
+                <li><a href="./aboutUs.html">Nosotros</a></li>
+                <li><a href="./contact.html">Contacto</a></li>
+            </ul>
+        </div>
+        <img src="./../img/boina.svg" alt="boina" class="boina">
+    </header>
+    <section>
+        <div>
+            <h3>Agregar producto</h3>
+            <form action="">
+                <input type="text" id="npName">
+                <input type="text" id="npType">
+                <input type="number" id="npCode">
+                <input type="number" id="npPrice">
+                <input type="number" id="npStock">
+                <button id="npAdd">Agregar Producto</button>
+            </form>
+        </div>
+        <!-- Aca se van a agregar todos los productos -->
+        <h3>Productos</h3>
+        <div id="productHolder">
+            <!-- se agrega por js los productos -->
+        </div>
+        <h3>Carrito</h3>
+        <div>
+            <ul id="basketHolder">
+                <!-- se agrega por js la canasta -->
+            </ul>
+            <p id="totalPrice"></p>
+            <div>
+                <button id="purchaseButton">Comprar</button>
+                <button id="emptyBasket">Borrar Carrito</button>
+            </div>
+            <p id="purchaseReceit"></p>
+        </div>
+
+    </section>
+    <script type="text/javascript" src="./../Javascript/store.js"></script>
+</body>
+</html>
