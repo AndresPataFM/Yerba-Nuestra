@@ -1,5 +1,11 @@
+//Constructor de componentes
+import componentBuilder from "./components/components.js"
+
+//Variables de local storage
 let productList;
 let savedBasket;
+
+//Facilita calculos
 const pata = {
     round2: function(num){
         //redondea a 2 cifras
@@ -22,7 +28,7 @@ class Product{
         this.profit = this.markUp(price)
         this.price = this.profit+price;
         this.tax = this.taxes(this.price)
-        this.totalPrice = Math.round((this.price + this.tax + Number.EPSILON) * 100) / 100
+        this.totalPrice = pata.round2(this.price + this.tax) 
         this.stock = stock;
         this.available = false;
     }
@@ -39,7 +45,7 @@ class Product{
     //calcula el precio del markUp
     markUp= function(baseCost){
         let profit = 0.2
-        return Math.round((profit + Number.EPSILON) * 100) / 100
+        return pata.round2(baseCost *profit) 
     }
     // costo de impuestos
     taxes= function(sellCost){
@@ -47,7 +53,7 @@ class Product{
         let taxIVA = 0.21
         let taxHolder = taxIVA*sellCost
         //return asi para q tenga 2 decimales
-        return Math.round((taxHolder + Number.EPSILON) * 100) / 100
+        return pata.round2(taxHolder) 
     }
     restock = function(x){
             this.stock+=x
@@ -402,3 +408,4 @@ if (localStorage.getItem("savedBasket") == null) {
 
 storeBuilder.card()
 printer.changeBasketList()
+componentBuilder()
