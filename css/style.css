@@ -28,7 +28,8 @@ header {
   margin-bottom: 1%;
   position: fixed;
   top: 0;
-  left: 0; }
+  left: 0;
+  z-index: 9999999; }
 
 .logo {
   height: 78px;
@@ -46,6 +47,11 @@ header {
   align-content: center;
   justify-content: center; }
 
+nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center; }
+
 .barraMenu {
   list-style-type: none;
   margin: 0;
@@ -56,8 +62,7 @@ header {
     float: left;
     margin: 0.2rem;
     height: fit-content;
-    display: flex;
-    align-self: center;
+    display: list-item;
     font-size: 2rem;
     padding-left: 1%;
     padding-right: 1%; }
@@ -72,44 +77,77 @@ header {
       color: #DDFFBC;
       text-decoration: none; }
 
-.waveFull {
-  height: 250px;
-  overflow: hidden;
-  background-image: url("../img/yerbaMate.jpg");
-  background-repeat: none; }
-
-.waveClear {
-  height: 100%;
-  width: 100%; }
-
-.wavePaint {
-  stroke: none;
-  fill: #FEFFDE; }
-
-.div1 {
-  background-color: #FFED99;
-  height: 100px;
-  width: 100px; }
-
-.div2 {
-  background-color: #FFE194;
-  height: 100px;
-  width: 100px; }
-
-.div3 {
-  background-color: #FEFFDE;
-  height: 100px;
-  width: 100px; }
-
-.div4 {
+.hamburgerButton {
+  display: none;
   background-color: #DDFFBC;
-  height: 100px;
-  width: 100px; }
+  border-color: #91C788;
+  align-self: center;
+  margin-bottom: 5%;
+  font-size: 1.5rem; }
 
-.div5 {
-  background-color: #91C788;
-  height: 100px;
-  width: 100px; }
+@media only screen and (max-width: 768px) {
+  .hamburgerButton {
+    display: block; }
+  .barraMenu {
+    flex-direction: column;
+    display: none; }
+    .barraMenu li {
+      display: inline-block;
+      width: 100%;
+      text-align: center; } }
 
-.dark {
-  color: #382933; }
+footer {
+  display: flex;
+  justify-content: center; }
+
+.svgMultimedia {
+  filter: invert(86%) sepia(11%) saturate(1206%) hue-rotate(61deg) brightness(87%) contrast(82%); }
+
+body {
+  width: 80%;
+  font-size: 18px; }
+
+#productHolder {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: auto;
+  grid-column-gap: 25px;
+  grid-row-gap: 20px;
+  justify-items: center; }
+  #productHolder .productCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 3px solid #91C788;
+    border-radius: 5px;
+    background-color: #DDFFBC;
+    margin: 1%;
+    padding: 10px;
+    width: fit-content; }
+    #productHolder .productCard img {
+      width: 150px; }
+    #productHolder .productCard .dataHolder h4 {
+      color: #91C788;
+      font-weight: bolder;
+      text-align: center; }
+    #productHolder .productCard .dataHolder p {
+      text-align: center; }
+    #productHolder .productCard form {
+      display: flex; }
+
+#procesando {
+  display: none;
+  background-color: #FEFFDE;
+  border: 3px solid #FFE194; }
+  #procesando p {
+    width: 250px;
+    text-align: center;
+    color: #dcddc9; }
+
+#compraRealizada {
+  display: none;
+  background-color: #FEFFDE; }
+  #compraRealizada p {
+    width: 250px;
+    text-align: center;
+    color: #382933; }

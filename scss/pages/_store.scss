@@ -1,0 +1,56 @@
+
+
+#productHolder{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: auto;
+    grid-column-gap: 25px;
+    grid-row-gap: 20px;
+    justify-items: center;
+    .productCard{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border: 3px solid $Secondary-Dark;
+        border-radius: 5px;
+        background-color: $Secondary;
+        margin: 1%;
+        padding: 10px;
+        width: fit-content;
+        img{
+            width: 150px;
+        }
+        .dataHolder{
+            h4{
+                color: $Secondary-Dark;
+                font-weight: bolder;
+                text-align: center;
+            }
+            p{
+                text-align: center;
+            }
+        }
+        form{
+            display: flex;
+        }
+    }
+}
+#procesando{
+    display: none;
+    background-color: $Clear;
+    border: 3px solid $Primary-Dark;
+    p{
+        width: 250px;
+        text-align: center;
+        color: $Clear-Dark;
+    }
+}
+#compraRealizada{
+    display: none;
+    background-color: $Clear;
+    p{
+        width: 250px;
+        text-align: center;
+        color: $Dark;
+    }
+}

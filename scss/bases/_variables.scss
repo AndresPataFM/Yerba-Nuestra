@@ -1,14 +1,24 @@
 // Color Pallette
-$Yellow: #FFED99;
-$Yellow-Dark: #FFE194;
-$Green: #DDFFBC;
-$Green-Dark: #91C788;
-$White: #FEFFDE;
-$White-Dark: #dcddc9;
+$Primary: #FFED99;
+$Primary-Dark: #FFE194;
+$Secondary: #DDFFBC;
+$Secondary-Dark: #91C788;
+$Clear: #FEFFDE;
+$Clear-Dark: #dcddc9;
 $Dark: #382933;
+
+$svg-Color: invert(95%) sepia(7%) saturate(1307%) hue-rotate(37deg) brightness(101%) contrast(105%);
+$svg-Color-Dark: invert(86%) sepia(11%) saturate(1206%) hue-rotate(61deg) brightness(87%) contrast(82%);
 
 //Font
 @font-face {
     font-family: 'PlayfairDisplay-VariableFont';
     src: url('/font/PlayfairDisplay-VariableFont_wght.ttf');
 };
+
+// Media
+
+$small-PC: 1024px;
+$tablet: 768px;
+$phone-H: 480px;
+$phone-V: 320px;

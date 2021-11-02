@@ -1,5 +1,5 @@
 //Constructor de componentes
-import componentBuilder from "./components/components.js"
+
 
 //Variables de local storage
 let productList;
@@ -14,6 +14,10 @@ const pata = {
     rounder: function(num, order){
         //redondea al orden elegido
         return Math.round((num + Number.EPSILON) * Math.pow(10, order)) / Math.pow(10, order)
+    },
+    removeArrayItem: function(array, index){
+        array.splice(index, 1)
+        return array;
     },
 }
 
@@ -159,10 +163,17 @@ const store = {
             let productDesired = this.getProduct(code)
             let temporary = new this.BasketProduct(productDesired, quantity)
             this.basket.push(temporary)
-            localStorage.setItem("savedBasket", JSON.stringify(store.sell.basket    ))
+            localStorage.setItem("savedBasket", JSON.stringify(store.sell.basket))
             printer.changeBasketList()
             //el return solo esta para comprobar x consola
             return console.log(temporary)
+        },
+        removeBasket: function(code){
+            let indexToRemove = this.basket.findIndex(item => item.product.code === code)
+            let newBasket = pata.removeArrayItem(store.sell.basket, indexToRemove);
+            this.basket = newBasket
+            localStorage.setItem("savedBasket", JSON.stringify(store.sell.basket))
+            printer.changeBasketList()
         },
         //Actualiza los precios totales de la canasta
         updateBasket: function(){
@@ -217,7 +228,6 @@ const store = {
         selling: function(){
             this.reduceStock()
             this.reset()
-            return alert("¡Gracias por su compra, vuelva pronto!")
         },
     },
     sort: function(order){
@@ -354,10 +364,16 @@ const storeBuilder = {
 document.getElementById("totalPrice").innerText = `Total: $${store.sell.basketTotal}`
 
 //Botones
-document.getElementById("purchaseButton").onclick = ()=>{
+$("#purchaseButton").click( function(){
     store.sell.selling()
-    window.location.reload()
-}
+    $("#procesando").fadeIn(1000)
+    .delay(4000)
+    .fadeOut(1000);
+    $("#compraRealizada").delay(6000)
+    .fadeIn(1000)
+    .delay(15000)
+    .fadeOut(4000);
+})
 
 document.getElementById("emptyBasket").onclick = ()=>{
     store.sell.reset()
@@ -406,6 +422,6 @@ if (localStorage.getItem("savedBasket") == null) {
     store.sell.basket = savedBasket;
 }
 
+
 storeBuilder.card()
 printer.changeBasketList()
-componentBuilder()

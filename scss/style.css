@@ -1,0 +1,175 @@
+@font-face {
+  font-family: 'PlayfairDisplay-VariableFont';
+  src: url("/font/PlayfairDisplay-VariableFont_wght.ttf");
+}
+
+html {
+  --top-spacing: 150px;
+  scroll-padding-top: var(--top-spacing);
+}
+
+body {
+  background-color: #FEFFDE;
+  font-family: PlayfairDisplay-VariableFont;
+  color: #382933;
+  margin: 0;
+  margin: var(--top-spacing) auto;
+}
+
+h1 {
+  text-align: center;
+  font-size: 3rem;
+  margin: 0;
+}
+
+header {
+  background-color: #91C788;
+  width: 100%;
+  min-height: 10vh;
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  margin-bottom: 1%;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.logo {
+  height: 78px;
+  filter: invert(95%) sepia(7%) saturate(1307%) hue-rotate(37deg) brightness(101%) contrast(105%);
+  margin: 1%;
+}
+
+.boina {
+  height: 78px;
+  filter: invert(95%) sepia(7%) saturate(1307%) hue-rotate(37deg) brightness(101%) contrast(105%);
+  margin: 1%;
+}
+
+.menuHolder {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+}
+
+.barraMenu {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-content: center;
+}
+
+.barraMenu li {
+  float: left;
+  margin: 0.2rem;
+  height: fit-content;
+  display: flex;
+  align-self: center;
+  font-size: 2rem;
+  padding-left: 1%;
+  padding-right: 1%;
+}
+
+.barraMenu li a {
+  display: block;
+  text-align: center;
+  color: #DDFFBC;
+  text-decoration: none;
+}
+
+.barraMenu li a:hover {
+  color: #FEFFDE;
+}
+
+.barraMenu li a:link, .barraMenu li a:visited {
+  color: #DDFFBC;
+  text-decoration: none;
+}
+
+.waveFull {
+  height: 250px;
+  overflow: hidden;
+  background-image: url("../img/yerbaMate.jpg");
+  background-repeat: none;
+}
+
+.waveClear {
+  height: 100%;
+  width: 100%;
+}
+
+.wavePaint {
+  stroke: none;
+  fill: #FEFFDE;
+}
+
+body {
+  width: 80%;
+  font-size: 18px;
+}
+
+.div1 {
+  background-color: #FFED99;
+  height: 100px;
+  width: 100px;
+}
+
+.div2 {
+  background-color: #FFE194;
+  height: 100px;
+  width: 100px;
+}
+
+.div3 {
+  background-color: #FEFFDE;
+  height: 100px;
+  width: 100px;
+}
+
+.div4 {
+  background-color: #DDFFBC;
+  height: 100px;
+  width: 100px;
+}
+
+.div5 {
+  background-color: #91C788;
+  height: 100px;
+  width: 100px;
+}
+
+.dark {
+  color: #382933;
+}
+
+#productHolder {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: auto;
+  grid-column-gap: 25px;
+  grid-row-gap: 20px;
+  justify-items: center;
+}
+
+#productHolder .productCard {
+  display: flex;
+  flex-direction: column;
+  border: 3px solid #91C788;
+  border-radius: 5px;
+  background-color: #DDFFBC;
+  margin: 1%;
+  padding: 1%;
+  width: fit-content;
+}
+
+#productHolder .productCard img {
+  width: 150px;
+}
+
+#productHolder .productCard .dataHolder h4 {
+  color: #91C788;
+}
+/*# sourceMappingURL=style.css.map */

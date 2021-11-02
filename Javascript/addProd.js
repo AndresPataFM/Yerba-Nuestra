@@ -1,5 +1,3 @@
-import componentBuilder from "./components/components.js";
-
 const check = function (){
         if (localStorage.getItem("productList") == null) {
         savedProducts();
@@ -18,4 +16,3 @@ document.getElementById("npAdd").addEventListener("click", (e)=>{
     store.addProduct(name, type, code, price, stock)
 })
 check()
-componentBuilder()
