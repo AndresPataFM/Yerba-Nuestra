@@ -24,5 +24,8 @@
   "devDependencies": {
     "node-sass": "^6.0.1",
     "nodemon": "^2.0.12"
+  },
+  "dependencies": {
+    "axios": "^0.24.0"
   }
 }

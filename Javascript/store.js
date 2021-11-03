@@ -1,5 +1,27 @@
-//Constructor de componentes
+/* Guía de Uso
+    La funcionalidad de esta pagina esta dada por 3 objetos: pata, store y storeBuilder
 
+    || pata ||
+    el objeto pata tiene 3 metodos para facilitar el codigo de la página
+        pata.round2(numero)
+            recibe un número y lo redondea a 2 cifras
+        pata.rounder(numero, cifras)
+            recibe un numero y la cantidad de cifras a la que se desea redondear
+        pata.removeArrayItem(array, index)
+            recibe un array y un index del elemento a remover del arrat. Remueve el elemento del array y te devuelve el array reducido
+
+    || store ||
+    es el objeto principal detras de la funcionalidad de la tienda. Aca es donde se manejan tanto los productos, como la canasta, como las funciones de sorteo.
+        store.Product
+        es un constructor
+
+
+
+
+
+
+
+*/ 
 
 //Variables de local storage
 let productList;
@@ -21,52 +43,49 @@ const pata = {
     },
 }
 
-
-class Product{
-    //Crea al producto
-    constructor(name, type, code, price, stock){
-        this.name = name;
-        this.type = type;
-        this.code = code;
-        this.baseCost = price;
-        this.profit = this.markUp(price)
-        this.price = this.profit+price;
-        this.tax = this.taxes(this.price)
-        this.totalPrice = pata.round2(this.price + this.tax) 
-        this.stock = stock;
-        this.available = false;
-    }
-    //Cambia el booleano available dependiendo si hay stock o no
-    empty = function(){
-        if(this.stock<1){
-            return this.available=false
-        }
-        if(this.stock>1){
-            return this.available=true
-        }
-    }
-    //agrega stock al producto y checkea si esta disponible
-    //calcula el precio del markUp
-    markUp= function(baseCost){
-        let profit = 0.2
-        return pata.round2(baseCost *profit) 
-    }
-    // costo de impuestos
-    taxes= function(sellCost){
-        //por ahora solo hay IVA
-        let taxIVA = 0.21
-        let taxHolder = taxIVA*sellCost
-        //return asi para q tenga 2 decimales
-        return pata.round2(taxHolder) 
-    }
-    restock = function(x){
-            this.stock+=x
-            this.empty()
-        }
-}
-
-
 const store = {
+    Product: class{
+        //Crea al producto
+        constructor(name, type, code, price, stock){
+            this.name = name;
+            this.type = type;
+            this.code = code;
+            this.baseCost = price;
+            this.profit = this.markUp(price)
+            this.price = this.profit+price;
+            this.tax = this.taxes(this.price)
+            this.totalPrice = pata.round2(this.price + this.tax) 
+            this.stock = stock;
+            this.available = false;
+        }
+        //Cambia el booleano available dependiendo si hay stock o no
+        empty = function(){
+            if(this.stock<1){
+                return this.available=false
+            }
+            if(this.stock>=1){
+                return this.available=true
+            }
+        }
+        //agrega stock al producto y checkea si esta disponible
+        //calcula el precio del markUp
+        markUp= function(baseCost){
+            let profit = 0.2
+            return pata.round2(baseCost*profit) 
+        }
+        // costo de impuestos
+        taxes= function(sellCost){
+            //por ahora solo hay IVA
+            let taxIVA = 0.21
+            let taxHolder = taxIVA*sellCost
+            //return asi para q tenga 2 decimales
+            return pata.round2(taxHolder) 
+        }
+        restock = function(x){
+                this.stock+=x
+                this.empty()
+            }
+    },
     //Array que contiene todos los productos
     products: [],
     //Cantidad de productos en el array
@@ -126,13 +145,23 @@ const store = {
                 return console.log(`Error: el codigo ${code} ya esta en uso`)
             }
         }
-        this.products.push(new Product(name, type, code, price, stock));
+        this.products.push(new this.Product(name, type, code, price, stock));
         this.products[this.products.length-1].empty();
         this.productQuantity++;
         localStorage.setItem("productList", JSON.stringify(store.products))
         return console.log(this.products[this.products.length-1])
     },
     sell: {
+        // Es el constructor de productos apra la canasta
+        BasketProduct: class {
+            constructor(newProduct, newQuantity){
+                this.product=newProduct;
+                this.quantity=newQuantity;
+                this.purchaseProfit=pata.round2(newQuantity*newProduct.profit);
+                this.purchaseTax=pata.round2(newQuantity*newProduct.tax);
+                this.purchaseTotal=pata.round2(newQuantity*newProduct.totalPrice);
+            }
+        },
         //canasta con los productos a comprar
         basket: [],
         //guarda el precio total de la venta
@@ -141,17 +170,6 @@ const store = {
         basketPriceTotal: 0,
         basketProfit: 0,
         basketTaxesTotal: 0,
-        deliveryTotal: 0,
-        //crea los productos y cantidades a para que luego lo agreguen a la canasta
-        BasketProduct: class {
-            constructor(newProduct, newQuantity){
-                this.product=newProduct;
-                this.quantity=newQuantity;
-                this.purchaseProfit=newQuantity*newProduct.profit;
-                this.purchaseTax=newQuantity*newProduct.tax;
-                this.purchaseTotal=newQuantity*newProduct.totalPrice;
-            }
-        },
         //si matchea el codigo trae el producto
         getProduct: function(code){
             let toBuy = {};
@@ -164,27 +182,32 @@ const store = {
             let temporary = new this.BasketProduct(productDesired, quantity)
             this.basket.push(temporary)
             localStorage.setItem("savedBasket", JSON.stringify(store.sell.basket))
-            printer.changeBasketList()
+            this.updateBasket()
+            storeBuilder.changeBasketList()
             //el return solo esta para comprobar x consola
             return console.log(temporary)
+        },
+        updateBasket: function(){
+            this.basketPriceTotal = 0
+            this.basketProfit = 0
+            this.basketTaxesTotal = 0
+            this.basketTotal = 0
+            this.basket.forEach(x =>{
+                this.basketPriceTotal+=x.purchaseTotal
+                this.basketProfit+=x.purchaseProfit
+                this.basketTaxesTotal+=x.purchaseTax
+            })
+            this.basketTotal = pata.round2(this.basketPriceTotal)
+            storeBuilder.changeBasketTotal()
         },
         removeBasket: function(code){
             let indexToRemove = this.basket.findIndex(item => item.product.code === code)
             let newBasket = pata.removeArrayItem(store.sell.basket, indexToRemove);
             this.basket = newBasket
             localStorage.setItem("savedBasket", JSON.stringify(store.sell.basket))
-            printer.changeBasketList()
+            storeBuilder.changeBasketList()
         },
         //Actualiza los precios totales de la canasta
-        updateBasket: function(){
-            this.basket.forEach(x =>{
-                this.basketPriceTotal+=x.purchaseTotal
-                this.basketProfit+=x.purchaseProfit
-                this.basketTaxesTotal+=x.purchaseTax
-            })
-            this.basketTotal = this.basketPriceTotal + this.basketProfit + this.basketTaxesTotal + this.deliveryTotal
-            return console.log(this.basketTotal)
-        },
         //Calcula el precio del delivery
         deliveryFind: function(deliveryCode){
             if(store.locations.some(loc =>{
@@ -220,6 +243,7 @@ const store = {
                 this.basket.forEach(x => {
                     if(store.products[i].code===x.product.code){
                         store.products[i].stock-=x.quantity
+                        store.products[i].empty()
                     }
                 })
             }
@@ -228,6 +252,7 @@ const store = {
         selling: function(){
             this.reduceStock()
             this.reset()
+            return alert("¡Gracias por su compra, vuelva pronto!")
         },
     },
     sort: function(order){
@@ -278,8 +303,11 @@ const store = {
     }
 }
 
-const printer = {
-    changeBasketTotal:function(){},
+// Es un objeto que crea los elementos html de la pagina con distintos metodos
+const storeBuilder = {
+    changeBasketTotal:function(){
+        document.getElementById("totalPrice").innerText = `Total: $${store.sell.basketTotal}`
+    },
     changeBasketList: function(){
         let lista = document.getElementById("basketHolder")
         lista.innerHTML = "";
@@ -289,96 +317,82 @@ const printer = {
             li.textContent = `${item.quantity} unidades de ${item.product.name}($${item.product.totalPrice}) pro un total de ${item.purchaseTotal}`
             lista.appendChild(li);
         }
+    document.getElementById("totalPrice").innerText = `Total: $${store.sell.basketTotal}`
     },
-}
-
-const storeBuilder = {
     card: function(){
         let cardHolder = document.getElementById("productHolder")
         for(let i=0; i<store.products.length; i++){
-            //crea el esqueleto principal y le pone clase
-            let card = document.createElement("div")
-            card.classList.add("productCard")
-            //crea la imagen del producto y la agrega
-            let img = document.createElement("img")
-            //esta de palceholder
-            img.src = "./../img/mateLogo.svg"
-            card.appendChild(img)
-            //crea un contenedor para el nombre, precio, submit para comprar y boton de compra
-            let dataHolder = document.createElement("div")
-            dataHolder.classList.add("dataHolder")
-            //crea el nombre del producto y lo agrega a dataHolder
-            let name = document.createElement("h4")
-            name.textContent = `${store.products[i].name}`
-            dataHolder.appendChild(name)
-            //Muestra el stock
-            let stock = document.createElement("p")
-            stock.textContent = `${store.products[i].stock} en stock`
-            dataHolder.appendChild(stock)
-            //crea el precio y lo agrega a dataHolder despues del nombre
-            let price = document.createElement("p")
-            price.textContent = `$${store.products[i].totalPrice}`
-            dataHolder.appendChild(price)
-            // Se fija si hay stock
-            if(store.products[i].stock>0){
-                //crea un form con un input y un boton si hay stock
-                // form
-                let form = document.createElement("form")
-                form.classList.add("productForm")
-                // input
-                let input = document.createElement("input")
-                input.type = "number"
-                input.placeholder = "Ingrese cantidad";
-                input.id = `sellProductInput${store.products[i].code}`
-                form.appendChild(input)
-                // boton
-                let button = document.createElement("button")
-                button.id = `sellProduct${store.products[i].code}`
-                button.dataset.target = `#addProductBtn${store.products[i].code}`;
-                button.addEventListener("click", (e)=>{
-                    e.preventDefault()
-                    let quantity = Number(document.getElementById(`sellProductInput${store.products[i].code}`).value)
-                    if(store.products[i].stock<quantity){
-                        let error = document.createElement("p")
-                        error.innerText = "No podes comprar mas de lo que tenemos en stock"
-                        dataHolder.appendChild(error)
-                        return console.log("se trato de comprar mas de lo que hay")
-                    }
-                    store.sell.addBasket(store.products[i].code, quantity)
-                })
-                button.innerText = "Comprar"
-                form.appendChild(button)
-                dataHolder.appendChild(form)
-            } else{
-                let p = document.createElement("p")
-                p.classList.add("sinStock")
-                p.textContent = "Sin stock"
-                dataHolder.appendChild(p)
+            //solo muestra el producto si esta dispononible
+            if(store.products[i].available){
+                //crea el esqueleto principal y le pone clase
+                let card = document.createElement("div")
+                card.classList.add("productCard")
+                //crea la imagen del producto y la agrega
+                let img = document.createElement("img")
+                //esta de palceholder
+                img.src = "./../img/mateLogo.svg"
+                card.appendChild(img)
+                //crea un contenedor para el nombre, precio, submit para comprar y boton de compra
+                let dataHolder = document.createElement("div")
+                dataHolder.classList.add("dataHolder")
+                //crea el nombre del producto y lo agrega a dataHolder
+                let name = document.createElement("h4")
+                name.textContent = `${store.products[i].name}`
+                dataHolder.appendChild(name)
+                //Muestra el stock
+                let stock = document.createElement("p")
+                stock.textContent = `${store.products[i].stock} en stock`
+                dataHolder.appendChild(stock)
+                //crea el precio y lo agrega a dataHolder despues del nombre
+                let price = document.createElement("p")
+                price.textContent = `$${store.products[i].totalPrice}`
+                dataHolder.appendChild(price)
+                // Se fija si hay stock
+                if(store.products[i].stock>0){
+                    //crea un form con un input y un boton si hay stock
+                    // form
+                    let form = document.createElement("form")
+                    form.classList.add("productForm")
+                    // input
+                    let input = document.createElement("input")
+                    input.type = "number"
+                    input.placeholder = "Ingrese cantidad";
+                    input.id = `sellProductInput${store.products[i].code}`
+                    form.appendChild(input)
+                    // boton
+                    let button = document.createElement("button")
+                    button.id = `sellProduct${store.products[i].code}`
+                    button.dataset.target = `#addProductBtn${store.products[i].code}`;
+                    button.addEventListener("click", (e)=>{
+                        e.preventDefault()
+                        let quantity = Number(document.getElementById(`sellProductInput${store.products[i].code}`).value)
+                        if(store.products[i].stock<quantity){
+                            error.innerText = "No podes comprar mas de lo que tenemos en stock"
+                            return console.log("se trato de comprar mas de lo que hay")
+                        } else if (quantity<1 || quantity == NaN){
+                            error.innerText = "Las cantidades a comprar son números mayores a 1"
+                        }
+                        store.sell.addBasket(store.products[i].code, quantity)
+                    })
+                    button.innerText = "Comprar"
+                    form.appendChild(button)
+                    let error = document.createElement("p")
+                    dataHolder.appendChild(form)
+                    dataHolder.appendChild(error)
+                } else{
+                    let p = document.createElement("p")
+                    p.classList.add("sinStock")
+                    p.textContent = "Sin stock"
+                    dataHolder.appendChild(p)
+                }
+                card.appendChild(dataHolder)
+                cardHolder.appendChild(card)
             }
-            card.appendChild(dataHolder)
-            cardHolder.appendChild(card)
         }
     },
 }
-//Precio de la canasta
-document.getElementById("totalPrice").innerText = `Total: $${store.sell.basketTotal}`
 
-//Botones
-$("#purchaseButton").click( function(){
-    store.sell.selling()
-    $("#procesando").fadeIn(1000)
-    .delay(4000)
-    .fadeOut(1000);
-    $("#compraRealizada").delay(6000)
-    .fadeIn(1000)
-    .delay(15000)
-    .fadeOut(4000);
-})
 
-document.getElementById("emptyBasket").onclick = ()=>{
-    store.sell.reset()
-    window.location.reload()
-}
 function savedProducts(){
     store.addProduct("Playadito 1kg", "yerba", 1, 534, 99)
     store.addProduct("Nobleza Gaucha 1kg", "yerba", 2, 407, 99)
@@ -422,6 +436,21 @@ if (localStorage.getItem("savedBasket") == null) {
     store.sell.basket = savedBasket;
 }
 
+// Como se utiliza tambien en el backdoor, esto se asegura que no trate de dar funcionalidad a componentes que no existen
+if(document.getElementById("totalPrice") !== null){
+    // Pone el precio a la canasta
+    document.getElementById("totalPrice").innerText = `Total: $${store.sell.basketTotal}`
+    // Botones
+    document.getElementById("purchaseButton").onclick = ()=>{
+        store.sell.selling()
+        window.location.reload()
+    }
+    document.getElementById("emptyBasket").onclick = ()=>{
+        store.sell.reset()
+        window.location.reload()
+    }
+    storeBuilder.card()
+    storeBuilder.changeBasketList()
+    store.sell.updateBasket()
+} else {console.log("Estas en el backdoor")}
 
-storeBuilder.card()
-printer.changeBasketList()
