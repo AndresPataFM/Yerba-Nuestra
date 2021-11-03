@@ -1,7 +1,8 @@
 import footerBuilder from "./footer.js";
 import headerBuilder from "./header.js";
 
-export default function componentBuilder(){
+function componentBuilder(){
     footerBuilder()
     headerBuilder()
 }
+componentBuilder()

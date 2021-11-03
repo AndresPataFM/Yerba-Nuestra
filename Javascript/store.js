@@ -272,7 +272,10 @@ const store = {
         selling: function(){
             this.reduceStock()
             this.reset()
-            return alert("¡Gracias por su compra, vuelva pronto!")
+            storeBuilder.changeBasketList()
+            return Swal.fire('Venta realizada',
+            '¡Muchas gracias por su compra!',
+            'success')
         },
     },
     sort: function(order){
@@ -350,7 +353,7 @@ const storeBuilder = {
                 //crea la imagen del producto y la agrega
                 let img = document.createElement("img")
                 //esta de palceholder
-                img.src = "./../img/mateLogo.svg"
+                img.src = `./../img/products/${store.products[i].code}.webp`
                 card.appendChild(img)
                 //crea un contenedor para el nombre, precio, submit para comprar y boton de compra
                 let dataHolder = document.createElement("div")
@@ -463,7 +466,6 @@ if(document.getElementById("totalPrice") !== null){
     // Botones
     document.getElementById("purchaseButton").onclick = ()=>{
         store.sell.selling()
-        window.location.reload()
     }
     document.getElementById("emptyBasket").onclick = ()=>{
         store.sell.reset()
@@ -473,4 +475,3 @@ if(document.getElementById("totalPrice") !== null){
     storeBuilder.changeBasketList()
     store.sell.updateBasket()
 } else {console.log("Estas en el backdoor")}
-

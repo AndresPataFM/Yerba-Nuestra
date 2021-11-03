@@ -32,7 +32,9 @@ export default function headerBuilder(){
         menu.appendChild(li)
     })
     nav.appendChild(menu)
-    let navContainer
+    let navContainer = document.createElement("div")
+    navContainer.classList="navHolder"
+    navContainer.appendChild(nav)
     menuHolder.appendChild(nav)
     header.appendChild(menuHolder)
     //Crea la segunda imagen
