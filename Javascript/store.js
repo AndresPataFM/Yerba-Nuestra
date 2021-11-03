@@ -61,10 +61,12 @@ const store = {
         //Cambia el booleano available dependiendo si hay stock o no
         empty = function(){
             if(this.stock<1){
-                return this.available=false
+                this.available=false
+                return this.available
             }
             if(this.stock>=1){
-                return this.available=true
+                this.available=true
+                return this.available
             }
         }
         //agrega stock al producto y checkea si esta disponible
@@ -81,10 +83,6 @@ const store = {
             //return asi para q tenga 2 decimales
             return pata.round2(taxHolder) 
         }
-        restock = function(x){
-                this.stock+=x
-                this.empty()
-            }
     },
     //Array que contiene todos los productos
     products: [],
@@ -150,6 +148,28 @@ const store = {
         this.productQuantity++;
         localStorage.setItem("productList", JSON.stringify(store.products))
         return console.log(this.products[this.products.length-1])
+    },
+    // se fija el stock del producto y marca si esta disponible
+    checkStock: function(code){
+        let productIndex = this.products.findIndex(item => item.code === code)
+        if(this.products[productIndex].stock<0){
+            this.products[productIndex].available=false
+        } else {
+            this.products[productIndex].available=true
+        }
+
+    },
+    //Aumenta el stock de un producto
+    restock: function(code, quantity){
+        quantity = Number(quantity)
+        if(!Number.isInteger(quantity) || quantity<1){
+            return console.log("al aumentar el stock se tienen que usar números enteros mayores a 1")
+        }
+        let productIndex = this.products.findIndex(item => item.code === code)
+        this.products[productIndex].stock += quantity
+        store.checkStock(code)
+        localStorage.setItem("productList", JSON.stringify(store.products))
+        return console.log(`El nuevo stock de producto codigo ${this.products[productIndex].code} es de ${this.products[productIndex].stock}`)
     },
     sell: {
         // Es el constructor de productos apra la canasta
@@ -243,7 +263,7 @@ const store = {
                 this.basket.forEach(x => {
                     if(store.products[i].code===x.product.code){
                         store.products[i].stock-=x.quantity
-                        store.products[i].empty()
+                        store.checkStock(store.products[i].code)
                     }
                 })
             }
