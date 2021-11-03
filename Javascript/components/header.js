@@ -32,6 +32,7 @@ export default function headerBuilder(){
         menu.appendChild(li)
     })
     nav.appendChild(menu)
+    let navContainer
     menuHolder.appendChild(nav)
     header.appendChild(menuHolder)
     //Crea la segunda imagen
