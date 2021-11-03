@@ -4,10 +4,12 @@ html {
 }
 body{
     background-color: $Clear;
-    font-family: PlayfairDisplay-VariableFont;
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
     color: $Dark;
     margin: 0;
     margin: var(--top-spacing) auto;
+    width: 80%;
 }
 h1{
     text-align: center;

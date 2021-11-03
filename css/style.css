@@ -4,10 +4,12 @@ html {
 
 body {
   background-color: #FEFFDE;
-  font-family: PlayfairDisplay-VariableFont;
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
   color: #382933;
   margin: 0;
-  margin: var(--top-spacing) auto; }
+  margin: var(--top-spacing) auto;
+  width: 80%; }
 
 h1 {
   text-align: center;
@@ -98,11 +100,6 @@ footer {
 
 .svgMultimedia {
   filter: invert(86%) sepia(11%) saturate(1206%) hue-rotate(61deg) brightness(87%) contrast(82%); }
-
-body {
-  width: 80%;
-  font-size: 18px;
-  font-family: 'Playfair Display', serif; }
 
 #productHolder {
   display: grid;
