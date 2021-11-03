@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'PlayfairDisplay-VariableFont';
-  src: url("./../../font/PlayfairDisplay-VariableFont_wght.ttf"); }
+  src: url("https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap"); }
 
 html {
   --top-spacing: 150px;
