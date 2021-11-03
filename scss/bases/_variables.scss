@@ -11,10 +11,8 @@ $svg-Color: invert(95%) sepia(7%) saturate(1307%) hue-rotate(37deg) brightness(1
 $svg-Color-Dark: invert(86%) sepia(11%) saturate(1206%) hue-rotate(61deg) brightness(87%) contrast(82%);
 
 //Font
-@font-face {
-    font-family: 'PlayfairDisplay-VariableFont';
-    src: url('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap');
-};
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap');
+
 
 // Media
 
