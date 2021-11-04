@@ -69,17 +69,22 @@ nav{
     margin-bottom: 5%;
     font-size: 1.5rem;
 }
+.menuToggle{
+    display: block;
+}
 @media only screen and (max-width: $tablet){
     .hamburgerButton{
         display: block;
     }
-    .barraMenu{
-        flex-direction: column;
+    .menuToggle{
         display: none;
-        li{
-            display: inline-block;
-            width: 100%;
-            text-align: center;
-        }
+        .barraMenu{
+            flex-direction: column;
+            li{
+                display: inline-block;
+                width: 100%;
+                text-align: center;
+            }
+    }
     }
 }

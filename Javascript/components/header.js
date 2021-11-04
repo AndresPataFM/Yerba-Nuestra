@@ -31,10 +31,10 @@ export default function headerBuilder(){
         li.appendChild(a)
         menu.appendChild(li)
     })
-    nav.appendChild(menu)
-    let navContainer = document.createElement("div")
-    navContainer.classList="navHolder"
-    navContainer.appendChild(nav)
+    let menuToggle = document.createElement("div")
+    menuToggle.classList="menuToggle"
+    menuToggle.appendChild(menu)
+    nav.appendChild(menuToggle)
     menuHolder.appendChild(nav)
     header.appendChild(menuHolder)
     //Crea la segunda imagen
@@ -45,6 +45,6 @@ export default function headerBuilder(){
     header.appendChild(imgBeret)
     //hace que el menu collapse o apareza con slide toggle para mobile
     $(".hamburgerButton").on("click", function (){
-        $(".barraMenu").toggle(100)
+        $(".menuToggle").toggle(100)
     })
 }
