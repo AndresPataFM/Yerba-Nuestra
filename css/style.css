@@ -74,11 +74,11 @@ nav {
       text-align: center;
       color: #DDFFBC;
       text-decoration: none; }
-    .barraMenu li a:hover {
-      color: #FEFFDE; }
     .barraMenu li a:link, .barraMenu li a:visited {
       color: #DDFFBC;
       text-decoration: none; }
+    .barraMenu li a:hover {
+      color: #FFED99; }
 
 .hamburgerButton {
   display: none;
@@ -109,6 +109,21 @@ footer {
 
 .svgMultimedia {
   filter: invert(86%) sepia(11%) saturate(1206%) hue-rotate(61deg) brightness(87%) contrast(82%); }
+
+.svgMultimedia:hover {
+  transform: scale(1.2); }
+
+.indexSection {
+  display: flex;
+  justify-content: center; }
+  .indexSection div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; }
+    .indexSection div p {
+      text-align: center;
+      width: fit-content; }
 
 #productHolder {
   display: grid;

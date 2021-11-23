@@ -5,3 +5,6 @@ footer{
 .svgMultimedia{
     filter: $svg-Color-Dark;
 }
+.svgMultimedia:hover{
+    transform: scale(1.2);
+}

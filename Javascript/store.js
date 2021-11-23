@@ -207,10 +207,22 @@ const store = {
             return console.log("al aumentar el stock se tienen que usar números enteros mayores a 1")
         }
         let productIndex = this.products.findIndex(item => item.code === code)
+        if(productIndex === -1){
+            return console.log(`No hay producto con código ${code}`)
+        }
         this.products[productIndex].stock += quantity
         store.checkStock(code)
         localStorage.setItem("productList", JSON.stringify(store.products))
         return console.log(`El nuevo stock de producto codigo ${this.products[productIndex].code} es de ${this.products[productIndex].stock}`)
+    },
+    remove: function(code){
+        let productIndex = this.products.findIndex(item => item.code === code)
+        if(productIndex === -1){
+            return console.log(`No hay producto con código ${code}`)
+        }
+        pata.removeArrayItem(store.products, productIndex)
+        localStorage.setItem("productList", JSON.stringify(store.products))
+        return console.log(store.products)
     },
     sell: {
         // Es el constructor de productos apra la canasta
@@ -272,6 +284,7 @@ const store = {
         //Actualiza los precios totales de la canasta
         //Calcula el precio del delivery
         deliveryFind: function(deliveryCode){
+            //Actualmente se removio el delivery, se mantiene solo por si se desea volver a agregar
             if(store.locations.some(loc =>{
                 loc.code === code
             })){
@@ -346,9 +359,16 @@ const store = {
                 //ordenar por type
                 store.products.sort((x, y)=>{return x.type.localeCompare(y.type)})
                 break;
+            case 6:
+                //ordenar precio de mayor a menor
+                store.products.sort((x, y)=>{
+                    if(x.baseCost<y.baseCost){return 1}
+                    if(x.baseCost>y.baseCost){return -1}
+                    return 0
+                })
             default:
                 //ayuda
-                console.log("ordenar por [parametro]: [1]code; [2]cost,price,etc; [3]stock; [4]name; [5]type")
+                console.log("ordenar por [parametro]: [1]code; [2]cost,price,etc; [3]stock; [4]name; [5]type [6]cost decreciente")
                 break;
         }
     }
@@ -380,6 +400,7 @@ const storeBuilder = {
     },
     card: function(){
         let cardHolder = document.getElementById("productHolder")
+        cardHolder.innerHTML = ""
         for(let i=0; i<store.products.length; i++){
             //solo muestra el producto si esta dispononible
             if(store.products[i].available){
@@ -524,3 +545,8 @@ if(document.getElementById("totalPrice") !== null){
     storeBuilder.changeBasketList()
     store.sell.updateBasket()
 } else {console.log("Estas en el backdoor")}
+
+document.getElementById("sort").addEventListener("change", ()=>{
+    store.rearrange(Number(document.getElementById("sort").value))
+    storeBuilder.card()
+})

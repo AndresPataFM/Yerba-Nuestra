@@ -1,0 +1,14 @@
+.indexSection{
+    display: flex;
+    justify-content: center;
+    div{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        p{
+            text-align: center;
+            width: fit-content;
+        }
+    }
+}

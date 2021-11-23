@@ -5,4 +5,5 @@ if (localStorage.getItem("productList") == null) {
 //Collapsa el menu con un slide toggle
 $(".hamburgerButton").on("click", function (){
     $(".menuToggle").toggle(100)
+    $(".hamburgerButton").css("display", "block")
 })

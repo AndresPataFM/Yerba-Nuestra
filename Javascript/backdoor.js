@@ -16,4 +16,15 @@ document.getElementById("npAdd").addEventListener("click", (e)=>{
     let stock = Number(document.getElementById("npStock").value)
     store.addProduct(name, type, code, price, stock)
 })
+document.getElementById("rsRestock").addEventListener("click", (e)=>{
+    e.preventDefault()
+    let code = Number(document.getElementById("rsCode").value)
+    let quantity = Number(document.getElementById("rsQuantity").value)
+    store.restock(code, quantity)
+})
+document.getElementById("rpRemove").addEventListener("click", (e)=>{
+    e.preventDefault()
+    let code = Number(document.getElementById("rpCode").value)
+    store.remove(code)
+})
 check()

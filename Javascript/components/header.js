@@ -27,7 +27,7 @@ export default function headerBuilder(){
     //crea el ul, li y a
     let menu = document.createElement("ul")
     menu.classList.add("barraMenu")
-    let links = [{link:"./../index.html", name:"Home"}, {link:"./store.html", name:"Productos"}, {link:"./aboutUs.html", name:"Nosotros"}, {link:"./contact.html" , name:"Contacto"}]
+    let links = [{link:"./../index.html", name:"Home"}, {link:"./store.html", name:"Productos"}, {link:"./aboutUs.html", name:"Nosotros"}]
     links.forEach(x =>{
         let li = document.createElement("li")
         let a = document.createElement("a")

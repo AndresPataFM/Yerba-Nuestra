@@ -58,12 +58,12 @@ nav{
             color: $Secondary;
             text-decoration: none;
         }
-        a:hover{
-            color: $Clear;
-        }
         a:link, a:visited {
             color: $Secondary;
             text-decoration: none;
+        }
+        a:hover{
+            color: $Primary;
         }
     }
 }
