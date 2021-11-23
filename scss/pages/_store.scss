@@ -59,3 +59,13 @@
         color: $Dark;
     }
 }
+@media only screen and (max-width: $small-PC){
+    #productHolder{
+        grid-template-columns: 1fr 1fr;
+    }
+}
+@media only screen and (max-width: $tablet){
+    #productHolder{
+        grid-template-columns: 1fr;
+    }
+}

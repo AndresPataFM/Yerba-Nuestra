@@ -16,3 +16,8 @@ h1{
     font-size: 3rem;
     margin: 0;
 }
+@media only screen and (max-width: $tablet){
+    body{
+        width: 100%;
+    }
+}

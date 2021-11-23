@@ -22,18 +22,22 @@
                 un metodo calcula todos los impuestos del producto
         store.products
             array que contiene todos los productos
-        store,productQuantity
+        store.sold
+            array que guarda las ventas realizadas
+        store.productQuantity
             cuenta la cantidad total de productos
         store.addProduct(nombre, tipo, codigo, precio, stock)
             agrega un nuevo Product al array de store.products validando los valores ingresados
         store.checkStock(codigo)
-            se fija si el producto con el codigo seleccionado tiene stock
+            se fija si el producto con el codigo seleccionado tiene stock, cambiando el booleano available del producto
         store.restock(codigo, cantidad)
             aumenta el stock del producto por la cantidad seleccionada
+        store.remove(codigo)
+            remueve el producto con el codigo seleccionado
         store.sell
             contiene todo el proceso de venta
             store.sell.BasketProduct({Product}, cantidad)
-                crea un producto con la cantidad a comprar a la canasta, calcylando precios
+                crea un producto con la cantidad a comprar a la canasta, calculando precios
             store.sell.basket
                 un array que guarda todos los productos a comprar
             store.sell.basketTotal
@@ -54,17 +58,24 @@
                 calcula los valores de basketTotal, basketPriceTotal, basketProfit, basketTaxesTotal con los valores de store.sell.basket
             removeBasket(codigo)
                 remueve un producto de la canasta que tenga el codigo ingresado
-            reset
-            reduceStock
-            selling
+            store.deliveryFind(codigo)
+                deprecated, tendra uso si se vuelven a implemetar deliveries
+            store.reset
+                vacia store.sell.basket e iguala los valores a 0 de las sumatorias
+            store.reduceStock
+                reduce el stock de los productos en store.products con sus correspondientes en canasta(con respecto a la cantidad de estos)
+            store.selling
+                vende todos los productos dentro de la canasta
         store.rearrange(nro)
+            ordena store.products dependiendo el nro ingresado, si no se agrega el valor para ordenar, envia un console.log con ayuda
 
-
-
-
-
-
-
+    || storeBuilder ||
+        storeBuilder.checkBasketTotal()
+            metodo que cambia en store.html el valor total de la canasta
+        store.changeBasketList
+            metodo que imprime en store.html la canasta
+        stoe.card
+            metodo que imprime las cartas de los productos de store.products si estan disponibles(available===true)
 
 */ 
 /*=================== ENTIDADES ===================*/
@@ -128,6 +139,8 @@ const store = {
     },
     //Array que contiene todos los productos
     products: [],
+    //array que guarda las ventas realizadas
+    sold: [],
     //Cantidad de productos en el array
     productQuantity: 0,
     //Agrega productos, aumenta la cantidad de productos y checkea si tiene en stock
@@ -193,12 +206,8 @@ const store = {
     },
     // se fija el stock del producto y marca si esta disponible
     checkStock: function(code){
-        let productIndex = this.products.findIndex(item => item.code === code)
-        if(this.products[productIndex].stock<0){
-            this.products[productIndex].available=false
-        } else {
-            this.products[productIndex].available=true
-        }
+        let productIndex = store.products.findIndex(item => item.code === code)
+        store.products[productIndex].available = store.products[productIndex].stock>1
     },
     //Aumenta el stock de un producto
     restock: function(code, quantity){
@@ -252,14 +261,21 @@ const store = {
         },
         //agrega producto a la canasta
         addBasket: function(code, quantity){
+            if(store.sell.basket.some(x => x.product.code === code)){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Ya agregaste ese producto a tu canasta',
+                })
+                return console.log("error: duplicado en canasta")
+            }
             let productDesired = this.getProduct(code)
             let temporary = new this.BasketProduct(productDesired, quantity)
             this.basket.push(temporary)
             localStorage.setItem("savedBasket", JSON.stringify(store.sell.basket))
             this.updateBasket()
             storeBuilder.changeBasketList()
-            //el return solo esta para comprobar x consola
-            return console.log(temporary)
+            storeBuilder.card()
         },
         updateBasket: function(){
             this.basketPriceTotal = 0
@@ -317,8 +333,11 @@ const store = {
         },
         selling: function(){
             this.reduceStock()
+            store.sold.push(store.sell.basket)
+            localStorage.setItem("sold", JSON.stringify(store.sold))
             this.reset()
             storeBuilder.changeBasketList()
+            storeBuilder.card()
             // mensaje de sweetAlert 2
             return Swal.fire('Venta realizada',
             '¡Muchas gracias por su compra!',
@@ -368,7 +387,7 @@ const store = {
                 })
             default:
                 //ayuda
-                console.log("ordenar por [parametro]: [1]code; [2]cost,price,etc; [3]stock; [4]name; [5]type [6]cost decreciente")
+                console.log("ordenar por [parametro]: [1]code; [2]cost,price,etc; [3]stock; [4]name; [5]type; [6]cost decreciente")
                 break;
         }
     }
@@ -401,6 +420,7 @@ const storeBuilder = {
     card: function(){
         let cardHolder = document.getElementById("productHolder")
         cardHolder.innerHTML = ""
+        store.rearrange(Number(document.getElementById("sort").value))
         for(let i=0; i<store.products.length; i++){
             //solo muestra el producto si esta dispononible
             if(store.products[i].available){
@@ -483,6 +503,7 @@ const storeBuilder = {
 //Variables de local storage
 let productList;
 let savedBasket;
+let savedSold;
 
 /*=================== FUNCIONES ===================*/
 
@@ -529,6 +550,14 @@ if (localStorage.getItem("savedBasket") == null) {
     store.sell.basket = savedBasket;
 }
 
+if(localStorage.getItem("sold") == null){
+    savedSold = store.sold
+    localStorage.setItem("sold", JSON.stringify(store.sold))
+} else {
+    savedSold =  JSON.parse(localStorage.getItem("sold"));
+    store.sold = savedSold
+}
+
 // Como se utiliza tambien en el backdoor, esto se asegura que no trate de dar funcionalidad a componentes que no existen
 if(document.getElementById("totalPrice") !== null){
     // Pone el precio a la canasta
@@ -541,12 +570,11 @@ if(document.getElementById("totalPrice") !== null){
         store.sell.reset()
         window.location.reload()
     }
+    document.getElementById("sort").addEventListener("change", ()=>{
+        store.rearrange(Number(document.getElementById("sort").value))
+        storeBuilder.card()
+    })
     storeBuilder.card()
     storeBuilder.changeBasketList()
     store.sell.updateBasket()
 } else {console.log("Estas en el backdoor")}
-
-document.getElementById("sort").addEventListener("change", ()=>{
-    store.rearrange(Number(document.getElementById("sort").value))
-    storeBuilder.card()
-})

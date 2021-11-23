@@ -1,12 +1,4 @@
-let productList
-const check = function (){
-        if (localStorage.getItem("productList") == null) {
-        savedProducts();
-    } else {
-        productList = JSON.parse(localStorage.getItem("productList"));
-        store.products = productList;
-}
-}
+//Agregar Productos
 document.getElementById("npAdd").addEventListener("click", (e)=>{
     e.preventDefault()
     let name = document.getElementById("npName").value
@@ -16,15 +8,30 @@ document.getElementById("npAdd").addEventListener("click", (e)=>{
     let stock = Number(document.getElementById("npStock").value)
     store.addProduct(name, type, code, price, stock)
 })
+//Remover Productos
+document.getElementById("rpRemove").addEventListener("click", (e)=>{
+    e.preventDefault()
+    let code = Number(document.getElementById("rpCode").value)
+    store.remove(code)
+})
+//Reducir Stock
 document.getElementById("rsRestock").addEventListener("click", (e)=>{
     e.preventDefault()
     let code = Number(document.getElementById("rsCode").value)
     let quantity = Number(document.getElementById("rsQuantity").value)
     store.restock(code, quantity)
 })
-document.getElementById("rpRemove").addEventListener("click", (e)=>{
+//Cambia el available
+document.getElementById("caChangeAvailable").addEventListener("click", (e)=>{
     e.preventDefault()
-    let code = Number(document.getElementById("rpCode").value)
-    store.remove(code)
+    let code = Number(document.getElementById("caCode").value)
+    let available = Number(document.getElementById("caAvailable").value)===1
+    let index = store.products.findIndex(item => item.code === code)
+    store.products[index].available = available
+    console.log(store.products[index])
 })
-check()
+//Lista de Productos
+document.getElementById("backdoorList").addEventListener("click", (e)=>{
+    e.preventDefault()
+    console.log(store.products)
+})

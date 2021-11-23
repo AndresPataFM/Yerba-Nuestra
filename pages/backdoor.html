@@ -14,7 +14,12 @@
     </header>
     <section>
         <div>
-            <h3>Agregar producto</h3>
+            <h3>Lista de Productos</h3>
+            <p>Console.log de los productos</p>
+            <button id="backdoorList">Lista</button>
+        </div>
+        <div>
+            <h3>Agregar Producto</h3>
             <form action="">
                 <input type="text" id="npName" placeholder="Nombre">
                 <input type="text" id="npType" placeholder="Tipo">
@@ -37,6 +42,17 @@
                 <input type="text" id="rsCode" placeholder="Codigo">
                 <input type="text" id="rsQuantity" placeholder="Cantidad">
                 <button id="rsRestock">Agregar Stock</button>
+            </form>
+        </div>
+        <div>
+            <h3>Cambiar Disponibilidad</h3>
+            <form action="">
+                <input type="text" id="caCode" placeholder="Codigo">
+                <select name="sort" id="caAvailable">
+                    <option value="1">Disponible</option>
+                    <option value="0">No Disponible</option>
+                </select>
+                <button id="caChangeAvailable">Cambiar</button>
             </form>
         </div>
     </section>
