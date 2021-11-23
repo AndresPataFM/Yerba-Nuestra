@@ -16,9 +16,12 @@
         background-color: $Secondary;
         margin: 1%;
         padding: 10px;
-        width: fit-content;
+        width: 250px;
+        height: 350px;
         img{
+            margin-top: 10px;
             width: 150px;
+            height: 150px;
         }
         .dataHolder{
             h4{
@@ -32,6 +35,8 @@
         }
         form{
             display: flex;
+            justify-content: center;
+            width: 230px;
         }
     }
 }

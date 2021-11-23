@@ -28,16 +28,21 @@ header {
   top: 0;
   left: 0;
   z-index: 9999999; }
+  header .headerLink {
+    height: min-content;
+    align-self: center; }
 
 .logo {
   height: 78px;
   filter: invert(95%) sepia(7%) saturate(1307%) hue-rotate(37deg) brightness(101%) contrast(105%);
-  margin: 1%; }
+  margin: 1%;
+  margin-left: 10px; }
 
 .boina {
   height: 78px;
   filter: invert(95%) sepia(7%) saturate(1307%) hue-rotate(37deg) brightness(101%) contrast(105%);
-  margin: 1%; }
+  margin: 1%;
+  margin-right: 12px; }
 
 .menuHolder {
   display: flex;
@@ -121,9 +126,12 @@ footer {
     background-color: #DDFFBC;
     margin: 1%;
     padding: 10px;
-    width: fit-content; }
+    width: 250px;
+    height: 350px; }
     #productHolder .productCard img {
-      width: 150px; }
+      margin-top: 10px;
+      width: 150px;
+      height: 150px; }
     #productHolder .productCard .dataHolder h4 {
       color: #91C788;
       font-weight: bolder;
@@ -131,7 +139,9 @@ footer {
     #productHolder .productCard .dataHolder p {
       text-align: center; }
     #productHolder .productCard form {
-      display: flex; }
+      display: flex;
+      justify-content: center;
+      width: 230px; }
 
 #procesando {
   display: none;

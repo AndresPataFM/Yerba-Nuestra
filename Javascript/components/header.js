@@ -2,11 +2,16 @@ export default function headerBuilder(){
     //Busca el header
     let header = document.getElementsByTagName("header")[0]
     //crea y agrega la primera img
+    let linkIndex = document.createElement("a")
+    linkIndex.href= "./../index.html"
+    linkIndex.classList.add("headerLink")
     let imgMate = document.createElement("img")
     imgMate.classList.add("logo")
     imgMate.alt = "logo"
     imgMate.src = "./../img/mateLogo.svg"
-    header.appendChild(imgMate)
+    imgMate.classList.add("logo")
+    linkIndex.appendChild(imgMate)
+    header.appendChild(linkIndex)
     //crea el nav, menuuholder y sus componentes
     let nav = document.createElement("nav")
     let menuHolder = document.createElement("div")
@@ -37,14 +42,21 @@ export default function headerBuilder(){
     nav.appendChild(menuToggle)
     menuHolder.appendChild(nav)
     header.appendChild(menuHolder)
+    //Crea link a backoffice
+    let backoffice = document.createElement("a")
+    backoffice.href= "./backdoor.html"
+    backoffice.classList.add("headerLink")
     //Crea la segunda imagen
     let imgBeret = document.createElement("img")
     imgBeret.classList.add("boina")
     imgBeret.alt = "boina"
     imgBeret.src = "./../img/boina.svg"
-    header.appendChild(imgBeret)
-    //hace que el menu collapse o apareza con slide toggle para mobile
+    imgBeret.classList.add("boina")
+    backoffice.appendChild(imgBeret)
+    header.appendChild(backoffice)
+    //hace que el menu collapse o apareza con slide toggle para mobile, si se usa el botton, no desaparece luego porque sobreescribe el css,
     $(".hamburgerButton").on("click", function (){
         $(".menuToggle").toggle(100)
+        $(".hamburgerButton").css("display", "block")
     })
 }

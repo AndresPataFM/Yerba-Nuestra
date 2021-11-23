@@ -1,8 +1,8 @@
-/* Guía de Uso
+/* =================== GUÍA DE USO ===================
     La funcionalidad de esta pagina esta dada por 3 objetos: pata, store y storeBuilder
 
     || pata ||
-    el objeto pata tiene 3 metodos para facilitar el codigo de la página
+        el objeto pata tiene 3 metodos para facilitar el codigo de la página
         pata.round2(numero)
             recibe un número y lo redondea a 2 cifras
         pata.rounder(numero, cifras)
@@ -11,9 +11,54 @@
             recibe un array y un index del elemento a remover del arrat. Remueve el elemento del array y te devuelve el array reducido
 
     || store ||
-    es el objeto principal detras de la funcionalidad de la tienda. Aca es donde se manejan tanto los productos, como la canasta, como las funciones de sorteo.
+        es el objeto principal detras de la funcionalidad de la tienda. Aca es donde se manejan tanto los productos, como la canasta, como las funciones de sorteo.
         store.Product
-        es un constructor
+            es una clase que utiliza nombre, tipo, codigo, precio y stock para crear un producto
+            store.Product.empty()
+                un metodo del objeto que se fija si tiene stock disponible [se pierde en local storage]
+            store.Product.markUp(costoBase)
+                es el metodo que calcula la ganancia al revender el producto, es mas facil cambiar la ganancia modificandolo
+            store.Product.taxes(precioVenta)
+                un metodo calcula todos los impuestos del producto
+        store.products
+            array que contiene todos los productos
+        store,productQuantity
+            cuenta la cantidad total de productos
+        store.addProduct(nombre, tipo, codigo, precio, stock)
+            agrega un nuevo Product al array de store.products validando los valores ingresados
+        store.checkStock(codigo)
+            se fija si el producto con el codigo seleccionado tiene stock
+        store.restock(codigo, cantidad)
+            aumenta el stock del producto por la cantidad seleccionada
+        store.sell
+            contiene todo el proceso de venta
+            store.sell.BasketProduct({Product}, cantidad)
+                crea un producto con la cantidad a comprar a la canasta, calcylando precios
+            store.sell.basket
+                un array que guarda todos los productos a comprar
+            store.sell.basketTotal
+                guarda el total a pagar de la canasta y delivery
+            store.sell.basketPriceTotal
+                guarda el total de la canasta de productos
+            store.sell.basketProfit
+                guarda la ganancia sacada de lso productos de la canasta
+            store.sell.basketTaxesTotal
+                guarda el total a impuestos a pagar
+            store.sell.deliveryTotal
+                guarda el total de delivery a pagar
+            store.sell.getProduct(codigo)
+                devuelve el {producto} con el codigo ingresado
+            addBasket(codigo, cantidad)
+                agrega  al array sore.sell.basket un BasketProduct con el codigo ingresado junto con la cantidad ingresada, cambiando los valores de precios mencionados (con updateBasket), guarda la canasta en local storage y llama una funcion para cambiar los productos que se muestran al usuario en la canasta.
+            updateBasket()
+                calcula los valores de basketTotal, basketPriceTotal, basketProfit, basketTaxesTotal con los valores de store.sell.basket
+            removeBasket(codigo)
+                remueve un producto de la canasta que tenga el codigo ingresado
+            reset
+            reduceStock
+            selling
+        store.rearrange(nro)
+
 
 
 
@@ -22,10 +67,7 @@
 
 
 */ 
-
-//Variables de local storage
-let productList;
-let savedBasket;
+/*=================== ENTIDADES ===================*/
 
 //Facilita calculos
 const pata = {
@@ -88,7 +130,6 @@ const store = {
     products: [],
     //Cantidad de productos en el array
     productQuantity: 0,
-    validators: false,
     //Agrega productos, aumenta la cantidad de productos y checkea si tiene en stock
     addProduct: function(name, type, code, price, stock){
         //validador de parametros ingresados
@@ -117,8 +158,8 @@ const store = {
             return console.log("Error: type tiene que ser un string")
         }
         //Valida stock (se valida antes que codigo porque codigo tarda mas en validar)
-        if(!Number.isInteger(stock)||stock<1){
-            return console.log("Error: todos los stock son numeros integrales mayores a 0")
+        if(!Number.isInteger(stock)||stock<0){
+            return console.log("Error: todos los stock son numeros integrales iguales o mayores a 0")
         }
         //Valida price
         if(price<=0){
@@ -146,6 +187,7 @@ const store = {
         this.products.push(new this.Product(name, type, code, price, stock));
         this.products[this.products.length-1].empty();
         this.productQuantity++;
+        store.rearrange(4)
         localStorage.setItem("productList", JSON.stringify(store.products))
         return console.log(this.products[this.products.length-1])
     },
@@ -157,7 +199,6 @@ const store = {
         } else {
             this.products[productIndex].available=true
         }
-
     },
     //Aumenta el stock de un producto
     restock: function(code, quantity){
@@ -190,6 +231,7 @@ const store = {
         basketPriceTotal: 0,
         basketProfit: 0,
         basketTaxesTotal: 0,
+        deliveryTotal: 0,
         //si matchea el codigo trae el producto
         getProduct: function(code){
             let toBuy = {};
@@ -217,7 +259,7 @@ const store = {
                 this.basketProfit+=x.purchaseProfit
                 this.basketTaxesTotal+=x.purchaseTax
             })
-            this.basketTotal = pata.round2(this.basketPriceTotal)
+            this.basketTotal = pata.round2(this.basketPriceTotal) + this.deliveryTotal
             storeBuilder.changeBasketTotal()
         },
         removeBasket: function(code){
@@ -236,15 +278,6 @@ const store = {
                 this.deliveryTotal=loc.price
                 return loc.price
             }
-        },
-        //calcula el precio total de la canasta
-        productPriceCalc: function(){
-            let priceHolder = 0;
-            for(let i=0; i<this.basket.length; i++){
-                priceHolder+= basket[i].product.price * basket[i].quantity;
-            };
-            this.productPriceTotal = priceHolder
-            return this.productPriceTotal
         },
         //Lleva la canasta al estado inicial (para cuando finaliza la compra)
         reset: function(){
@@ -273,12 +306,13 @@ const store = {
             this.reduceStock()
             this.reset()
             storeBuilder.changeBasketList()
+            // mensaje de sweetAlert 2
             return Swal.fire('Venta realizada',
             '¡Muchas gracias por su compra!',
             'success')
         },
     },
-    sort: function(order){
+    rearrange: function(order){
         switch(order){
             case 1:
                 //ordenar por codigo
@@ -287,7 +321,6 @@ const store = {
                     if(x.code<y.code){return -1}
                     return 0
                 })
-                return console.log(store.products)
                 break;
             case 2:
                  //ordenar por baseCost, por como estan codeado todos los precios, price, tax, profit, etc se ordenarian igual
@@ -296,30 +329,25 @@ const store = {
                     if(x.baseCost<y.baseCost){return -1}
                     return 0
                 })
-                return console.log(store.products)
                 break;
-                case 1:
             case 3:
-            //ordenar por stock
+                //ordenar por stock
                 store.products.sort((x, y)=>{
                     if(x.stock>y.stock){return 1}
                     if(x.stock<y.stock){return -1}
                     return 0
                 })
-                return console.log(store.products)
                 break;
             case 4:
                 //ordenar por name
                 store.products.sort((x, y)=>{return x.name.localeCompare(y.name)})
-                return console.log(store.products)
                 break;
             case 5:
                 //ordenar por type
                 store.products.sort((x, y)=>{return x.type.localeCompare(y.type)})
-                return console.log(store.products)
                 break;
             default:
-                //ordenar por codigo
+                //ayuda
                 console.log("ordenar por [parametro]: [1]code; [2]cost,price,etc; [3]stock; [4]name; [5]type")
                 break;
         }
@@ -337,7 +365,15 @@ const storeBuilder = {
         for (let i = 0; i<store.sell.basket.length; i++){
             let item = store.sell.basket[i]
             let li = document.createElement("li")
-            li.textContent = `${item.quantity} unidades de ${item.product.name}($${item.product.totalPrice}) pro un total de ${item.purchaseTotal}`
+            li.textContent = `${item.quantity} unidades de ${item.product.name}($${item.product.totalPrice}) pro un total de ${item.purchaseTotal}   `
+            let x = document.createElement("button")
+            x.innerHTML= "X"
+            x.addEventListener("click", (e)=>{
+                e.preventDefault()
+                store.sell.removeBasket(item.product.code)
+                store.sell.updateBasket()
+            })
+            li.appendChild(x)
             lista.appendChild(li);
         }
     document.getElementById("totalPrice").innerText = `Total: $${store.sell.basketTotal}`
@@ -354,6 +390,12 @@ const storeBuilder = {
                 let img = document.createElement("img")
                 //esta de palceholder
                 img.src = `./../img/products/${store.products[i].code}.webp`
+                img.alt = `${store.products[i].name}`
+                img.id = `img${store.products[i].code}`
+                img.addEventListener("error", ()=>{
+                    let temp = document.getElementById(`img${store.products[i].code}`)
+                    temp.src = "./../img/yerbaPlaceholder.png"
+                })
                 card.appendChild(img)
                 //crea un contenedor para el nombre, precio, submit para comprar y boton de compra
                 let dataHolder = document.createElement("div")
@@ -415,6 +457,13 @@ const storeBuilder = {
     },
 }
 
+/*=================== VARIABLES ===================*/
+
+//Variables de local storage
+let productList;
+let savedBasket;
+
+/*=================== FUNCIONES ===================*/
 
 function savedProducts(){
     store.addProduct("Playadito 1kg", "yerba", 1, 534, 99)
