@@ -420,6 +420,14 @@ const storeBuilder = {
     card: function(){
         let cardHolder = document.getElementById("productHolder")
         cardHolder.innerHTML = ""
+        if(!store.products.some(x => x.available=== true)){
+            Swal.fire({
+                icon: 'error',
+                title: 'Falta stock',
+                text: 'Nos quedamos sin productos, conseguiremos stock a la brevedad',
+            })
+            return console.log("error: no hay productos disponibles")
+        }
         store.rearrange(Number(document.getElementById("sort").value))
         for(let i=0; i<store.products.length; i++){
             //solo muestra el producto si esta dispononible
